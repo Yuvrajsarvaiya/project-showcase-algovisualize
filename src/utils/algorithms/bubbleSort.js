@@ -1,3 +1,5 @@
+import { getSortConditionOnDirection } from "./getSortConditionOnDirection";
+
 var isSorted = true;
 
 function bubbleSort(
@@ -5,14 +7,17 @@ function bubbleSort(
   currentRowIndex,
   currentColumnIndex,
   currentResult,
-  sortedValues
+  sortedValues,
+  sortDirection
 ) {
   let currentRunningArray =
     currentResult.currentAlgoOutput?.length > 0
       ? currentResult.currentAlgoOutput
       : array.barData;
 
-  if (currentRowIndex === currentRunningArray.length - 1) return "stop";
+  if (currentRowIndex === currentRunningArray.length) {
+    return "stop";
+  }
   if (currentColumnIndex >= currentRunningArray.length - 1 - currentRowIndex) {
     sortedValues.push(currentRunningArray[currentColumnIndex].barInputValue);
 
@@ -28,8 +33,11 @@ function bubbleSort(
     return currentRunningArray;
   }
   if (
-    currentRunningArray[currentColumnIndex].barInputValue >
-    currentRunningArray[currentColumnIndex + 1].barInputValue
+    getSortConditionOnDirection(
+      currentRunningArray[currentColumnIndex].barInputValue,
+      currentRunningArray[currentColumnIndex + 1].barInputValue,
+      sortDirection
+    )
   ) {
     swap(currentRunningArray, currentColumnIndex, currentColumnIndex + 1);
     isSorted = false;

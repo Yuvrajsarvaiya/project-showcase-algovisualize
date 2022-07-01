@@ -1,0 +1,92 @@
+body[data-theme="RED_THEME"] {
+  --primary: #c31235;
+  --primary-outline: #b6203e;
+  --btn-text-color: white;
+
+  --bg-aside: #281e20;
+  --bg-main: #191116;
+
+  --graph-active-bg: #c31235;
+}
+
+body[data-theme="ORANGE_THEME"] {
+  --primary: #c1a74c;
+  --primary-outline: #b59a35;
+  --btn-text-color: #141412;
+
+  --graph-active-bg: #c1a74c;
+}
+
+.graph-btn {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid var(--primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  /* background-color: #aa072a; */
+}
+
+.graph-btn--active {
+  background-color: var(--graph-active-bg);
+}
+
+/* ////// */
+
+.graph-bar-list {
+  display: inline-flex;
+  align-items: flex-end;
+}
+
+.graph-bar-list--reverse {
+  flex-direction: row-reverse;
+}
+
+.graph-bar {
+  display: block;
+  width: 5px;
+  height: 10px;
+  background-color: #699d10;
+  border-radius: 1px;
+}
+
+.graph-bar.medium {
+  height: 15px;
+  background-color: orange;
+}
+
+.graph-bar.large {
+  height: 20px;
+  background-color: blueviolet;
+}
+
+.color-palate {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.color-square {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 200ms ease-out;
+}
+
+.color-square:hover {
+  transform: scale(1.1);
+}
+
+.color-red {
+  background-color: #c31235;
+}
+
+.color-orange {
+  background-color: #c1a74c;
+}

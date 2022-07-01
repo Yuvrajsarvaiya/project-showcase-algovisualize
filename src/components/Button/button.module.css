@@ -1,0 +1,17 @@
+.btn {
+  background-color: var(--primary);
+  color: var(--btn-text-color);
+  font-weight: bold;
+  padding: 8px 24px;
+  outline: none;
+  border: none;
+  border-radius: 4px;
+  margin: 4px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  background-color: rgb(168, 165, 165);
+  color: rgb(236, 232, 232);
+}

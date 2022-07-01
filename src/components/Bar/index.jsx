@@ -1,18 +1,29 @@
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import { DownArrowIcon } from "../../assets/images";
+import { ALIGNMENT } from "../../constants";
+import { useAlgoSort } from "../../contexts/SortProvider";
 import { ACTION_TYPES } from "../../reducers/AlgoActions";
 
 import styles from "./Bar.module.css";
 
-const Bar = ({
-  input,
-  maxValue,
-  algoStart,
-  sortedValues,
-  dispatch,
-  isAlgorithmCompleted,
-}) => {
+const heightToBeFilled = window.innerHeight * 0.8;
+const getBarHeight = (barInputValue, maxValue) => {
+  const barHeight = (barInputValue / maxValue) * heightToBeFilled;
+  return barHeight;
+};
+
+const Bar = ({ maxValue }) => {
+  const [state, dispatch] = useAlgoSort();
+  const {
+    isAlgorithmStarted,
+    isAlgorithmRunning,
+    isAlgorithmCompleted,
+    completedSortedValues: sortedValues,
+    algoBarValues: input,
+    alignment,
+  } = state;
+
   const handleReorderBars = (result) => {
     if (!result.source || !result.destination) return;
     const copiedBardData = input.barData.map((barObj) => ({ ...barObj }));
@@ -30,19 +41,17 @@ const Bar = ({
       <Droppable droppableId="bars" direction="horizontal">
         {(provided) => (
           <div
-            {...provided.droppableProps}
             ref={provided.innerRef}
+            {...provided.droppableProps}
             style={{
-              position: "relative",
               width: "100%",
-              gap: 10,
-              height: "calc(100% - 50px)",
               display: "flex",
-              alignItems: "flex-end",
+              justifyContent: "center",
+              alignItems:
+                alignment === ALIGNMENT.BOTTOM ? "flex-end" : "flex-start",
             }}
           >
             {input.barData.map((bar, index) => {
-              const translateValue = 110 * index;
               const rgbValue = bar.barColor;
 
               return (
@@ -50,7 +59,7 @@ const Bar = ({
                   key={`${bar.barInputValue}-${index}`}
                   draggableId={`${bar.barInputValue}-${index}`}
                   index={index}
-                  isDragDisabled={algoStart || isAlgorithmCompleted}
+                  isDragDisabled={isAlgorithmRunning || isAlgorithmCompleted}
                 >
                   {(provided) => (
                     <div
@@ -60,36 +69,49 @@ const Bar = ({
                       {...provided.dragHandleProps}
                       style={{
                         ...provided.draggableProps.style,
-                        height: `calc(${
-                          (bar.barInputValue / maxValue) * 100
-                        }%)`,
-                        background: rgbValue,
-                        // transform: `translateX(${translateValue}px)`,
+                        height: getBarHeight(bar.barInputValue, maxValue),
+                        margin: 5,
                       }}
                     >
                       <div
-                        className={styles.barText}
                         style={{
-                          backgroundColor: sortedValues.includes(
-                            bar.barInputValue
-                          )
-                            ? "red"
-                            : "initial",
+                          // width: 100,
+                          transition: "all 200ms ease-out",
+                          height: getBarHeight(bar.barInputValue, maxValue),
+                          background: rgbValue,
                         }}
                       >
-                        {bar.barInputValue}
-                      </div>
-                      {input.currentPair.includes(index) && algoStart && (
                         <div
+                          className={styles.barText}
                           style={{
-                            position: "absolute",
-                            top: -80,
-                            color: "white",
+                            userSelect: "none",
+                            transition: "all 200ms ease-out",
+                            fontSize: 14,
+                            padding: 7,
+                            backgroundColor: sortedValues.includes(
+                              bar.barInputValue
+                            )
+                              ? "var(--primary)"
+                              : "initial",
                           }}
                         >
-                          <DownArrowIcon />
+                          {bar.barInputValue}
                         </div>
-                      )}
+                        {input.currentPair.includes(index) &&
+                          isAlgorithmStarted && (
+                            <div
+                              style={{
+                                position: "absolute",
+                                top: -80,
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                color: "white",
+                              }}
+                            >
+                              <DownArrowIcon />
+                            </div>
+                          )}
+                      </div>
                     </div>
                   )}
                 </Draggable>

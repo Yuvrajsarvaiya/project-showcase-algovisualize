@@ -1,3 +1,4 @@
+import { ALGORITHM_TYPE } from "../constants";
 import { constructBarData } from "../utils";
 import { ACTION_TYPES } from "./AlgoActions";
 import { getInitialStateBasedOnAlgoType } from "./reducer.utils";
@@ -29,14 +30,17 @@ export function algorithmReducer(state, action) {
         };
         return {
           ...state,
+          isAlgorithmStarted: true,
           isAlgorithmRunning: true,
           isAlgorithmCompleted: false,
           algoBarValues: constructBarData(initialInput, 0, 1),
+          completedSortedValues: [],
         };
       }
       return {
         ...state,
         isAlgorithmRunning: true,
+        isAlgorithmStarted: true,
       };
 
     case ACTION_TYPES.STOP:
@@ -46,6 +50,7 @@ export function algorithmReducer(state, action) {
       return {
         ...state,
         isAlgorithmRunning: false,
+        isAlgorithmStarted: false,
         isAlgorithmCompleted: true,
       };
 
@@ -54,12 +59,15 @@ export function algorithmReducer(state, action) {
         currentAlgoOutput: [],
         currentRowIndex: 0,
         currentColumnIndex:
-          action.payload.algorithmType === "bubbleSort" ? 0 : 1,
+          action.payload.algorithmType === ALGORITHM_TYPE.BUBBLE_SORT.name
+            ? 0
+            : 1,
       };
       return {
         ...state,
         isAlgorithmRunning: false,
         isAlgorithmCompleted: false,
+        isAlgorithmStarted: false,
         algoBarValues: constructBarData(initialInput, 0, 1),
         completedSortedValues: [],
       };
@@ -80,6 +88,18 @@ export function algorithmReducer(state, action) {
           ...state.algoBarValues,
           barData: action.payload.barData,
         },
+      };
+
+    case ACTION_TYPES.SET_SORTING_DIRECTION:
+      return { ...state, sortDirection: action.payload };
+
+    case ACTION_TYPES.SET_ALIGNMENT:
+      return { ...state, alignment: action.payload };
+
+    case ACTION_TYPES.UPDATE_INPUT_DATA:
+      return {
+        ...state,
+        algoBarValues: constructBarData(action.payload, 0, 1),
       };
 
     default:

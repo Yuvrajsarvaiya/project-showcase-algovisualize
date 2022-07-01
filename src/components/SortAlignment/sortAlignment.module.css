@@ -1,0 +1,10 @@
+.flex {
+  display: flex;
+}
+
+.alignmentText {
+  text-align: left;
+  margin-bottom: 8px;
+  color: #c2b7a3;
+  font-size: 15px;
+}

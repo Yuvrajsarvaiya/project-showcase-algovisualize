@@ -1,0 +1,91 @@
+.closeIcon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  position: absolute;
+  z-index: 100;
+}
+
+.closeMenu {
+  position: absolute;
+  top: 0px;
+  left: 19rem;
+  padding: 10px;
+  color: var(--btn-text-color);
+  z-index: 100;
+  opacity: 1;
+  transition: all 200ms ease;
+}
+
+.verticalLine {
+  width: 1px;
+  height: 100%;
+  background-color: var(--primary);
+  border-radius: 20;
+  margin-top: 2;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.menu {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: var(--btn-text-color);
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  gap: 7px;
+  background-color: var(--primary);
+  padding-block: 7px;
+  padding-inline: 10px;
+  border-radius: 10px;
+  transition: all 0.2s ease-out;
+  animation: alternate infinite jump 2s ease-in-out;
+}
+
+.menuIcon {
+  width: 30px;
+  height: 30px;
+}
+
+.actionHeading {
+  text-align: left;
+  color: #c2b7a3;
+  font-size: 15px;
+  margin-bottom: 7px;
+}
+
+.actionContainer {
+  display: flex;
+  align-items: center;
+}
+
+@keyframes jump {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+.label {
+  display: block;
+  color: #c2b7a3;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 5px;
+}

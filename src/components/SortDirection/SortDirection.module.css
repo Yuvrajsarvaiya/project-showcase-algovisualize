@@ -1,0 +1,12 @@
+.directionText {
+  text-align: left;
+  margin-bottom: 8px;
+  color: #c2b7a3;
+  font-size: 15px;
+}
+
+.directionWrapper {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
