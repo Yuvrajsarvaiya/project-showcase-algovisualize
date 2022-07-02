@@ -12,6 +12,7 @@ import styles from "./Sidebar.module.css";
 import Input from "../Input";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useRef } from "react";
 
 function Sidebar({ algorithmType, setAlgorithmType, isOpen, setIsOpen }) {
   const [state, dispatch] = useAlgoSort();
@@ -74,9 +75,12 @@ function Sidebar({ algorithmType, setAlgorithmType, isOpen, setIsOpen }) {
           <div className={styles.actionContainer}>
             <Button
               style={{
-                cursor: state.isAlgorithmRunning ? "not-allowed" : "pointer",
+                cursor:
+                  state.isAlgorithmRunning || state.isInputError
+                    ? "not-allowed"
+                    : "pointer",
               }}
-              disbaled={state.isAlgorithmRunning}
+              disbaled={state.isAlgorithmRunning || state.isInputError}
               onClick={() => dispatch({ type: ACTION_TYPES.START })}
             >
               {state.isAlgorithmStarted ? "Resume" : "Start"}
@@ -122,20 +126,38 @@ function Sidebar({ algorithmType, setAlgorithmType, isOpen, setIsOpen }) {
 
 function NumbersInput() {
   const [state, dispatch] = useAlgoSort();
-  const inputValues = state.algoBarValues.barData.map(
-    ({ barInputValue }) => barInputValue
-  );
+  // const inputValues = state.algoBarValues.barData.map(
+  //   ({ barInputValue }) => barInputValue
+  // );
+  const inputValues = state.inputData;
   const [numbers, setNumbers] = useState(inputValues?.toString() || "");
   const [error, setError] = useState(null);
+  let firstRender = useRef(true);
+
+  useEffect(() => {
+    if (firstRender.current === true) {
+      firstRender.current = false;
+    } else {
+      setNumbers(state.inputData);
+      setError(null);
+    }
+  }, [state.inputData]);
 
   const handleChange = (event) => {
     const numbersList = event.target.value;
     setNumbers(numbersList);
-    handleError(numbersList);
+
+    const { inRange, isPositive, isValidString, isEmpty } =
+      handleError(numbersList);
+
+    if (!inRange || !isPositive || !isValidString || isEmpty) {
+      dispatch({ type: ACTION_TYPES.SET_INPUT_ERROR, payload: true });
+    } else {
+      dispatch({ type: ACTION_TYPES.SET_INPUT_ERROR, payload: false });
+    }
   };
 
   const handleError = (numbersString) => {
-    console.log("numbersString", numbersString.trim());
     const positiveNumberRegex = /^[0-9,+]*$/;
     let inRange = true;
     let isPositive = true;
@@ -170,9 +192,14 @@ function NumbersInput() {
     if (error) return;
     const { inRange, isPositive, isValidString, isEmpty } =
       handleError(numbers);
-    if (!inRange || !isPositive || !isValidString || isEmpty) return;
+    if (!inRange || !isPositive || !isValidString || isEmpty) {
+      dispatch({ type: ACTION_TYPES.SET_INPUT_ERROR, payload: true });
+      return;
+    } else {
+      dispatch({ type: ACTION_TYPES.SET_INPUT_ERROR, payload: false });
+    }
 
-    const inputNumbers = numbers?.split(",").map((num) => Number(num));
+    const inputNumbers = numbers?.split(",").filter((num) => Number(num));
     dispatch({
       type: ACTION_TYPES.UPDATE_INPUT_DATA,
       payload: inputNumbers,

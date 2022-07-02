@@ -12,6 +12,8 @@ export function getInitialStateBasedOnAlgoType(algorithmType, initialInput) {
     timeInterval: 100,
     sortDirection: SORT_DIRECTION.ASCENDING,
     alignment: ALIGNMENT.BOTTOM,
+    inputData: initialInput,
+    isInputError: false,
   };
 
   if (algorithmType === ALGORITHM_TYPE.SELECTION_SORT.name) {

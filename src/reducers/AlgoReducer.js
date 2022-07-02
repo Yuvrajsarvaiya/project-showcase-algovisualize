@@ -33,7 +33,7 @@ export function algorithmReducer(state, action) {
           isAlgorithmStarted: true,
           isAlgorithmRunning: true,
           isAlgorithmCompleted: false,
-          algoBarValues: constructBarData(initialInput, 0, 1),
+          algoBarValues: constructBarData(state.inputData, 0, 1),
           completedSortedValues: [],
         };
       }
@@ -70,12 +70,15 @@ export function algorithmReducer(state, action) {
         isAlgorithmStarted: false,
         algoBarValues: constructBarData(initialInput, 0, 1),
         completedSortedValues: [],
+        isInputError: false,
+        inputData: [...initialInput],
       };
 
     case ACTION_TYPES.SET_INTERVAL:
       return {
         ...state,
-        timeInterval: action.payload,
+        timeInterval: action.payload.interval,
+        isInputError: action.payload.isInputError,
       };
 
     case ACTION_TYPES.UPDATE_UI:
@@ -99,7 +102,15 @@ export function algorithmReducer(state, action) {
     case ACTION_TYPES.UPDATE_INPUT_DATA:
       return {
         ...state,
+        inputData: action.payload,
         algoBarValues: constructBarData(action.payload, 0, 1),
+        completedSortedValues: [],
+      };
+
+    case ACTION_TYPES.SET_INPUT_ERROR:
+      return {
+        ...state,
+        isInputError: action.payload,
       };
 
     default:
