@@ -11,6 +11,7 @@ import { ACTION_TYPES } from "../../reducers/AlgoActions";
 import styles from "./Sidebar.module.css";
 import Input from "../Input";
 import { useState } from "react";
+import { useEffect } from "react";
 
 function Sidebar({ algorithmType, setAlgorithmType, isOpen, setIsOpen }) {
   const [state, dispatch] = useAlgoSort();
@@ -58,7 +59,7 @@ function Sidebar({ algorithmType, setAlgorithmType, isOpen, setIsOpen }) {
           setAlgorithmType={setAlgorithmType}
         />
 
-        <NumbersInput />
+        <NumbersInput key={algorithmType} />
 
         <IntervalInput />
 
@@ -125,12 +126,52 @@ function NumbersInput() {
     ({ barInputValue }) => barInputValue
   );
   const [numbers, setNumbers] = useState(inputValues?.toString() || "");
+  const [error, setError] = useState(null);
 
   const handleChange = (event) => {
-    setNumbers(event.target.value);
+    const numbersList = event.target.value;
+    setNumbers(numbersList);
+    handleError(numbersList);
+  };
+
+  const handleError = (numbersString) => {
+    console.log("numbersString", numbersString.trim());
+    const positiveNumberRegex = /^[0-9,+]*$/;
+    let inRange = true;
+    let isPositive = true;
+    let isValidString = positiveNumberRegex.test(numbersString);
+    let isEmpty = numbersString?.trim() === "";
+
+    numbersString.split(",").forEach((val) => {
+      if (val.trim() === "") return;
+      let value = Number(val);
+      if (value < 1 || value > 200) {
+        inRange = false;
+      } else if (value < 0) {
+        isPositive = false;
+      }
+    });
+    if (isEmpty) {
+      setError("please enter input");
+    } else if (!isPositive) {
+      setError("only positive numbers are allowed");
+    } else if (!inRange) {
+      setError("number must not exceed 1-200");
+    } else if (!isValidString) {
+      setError("Please enter valid input");
+    } else {
+      setError(null);
+    }
+
+    return { inRange, isPositive, isValidString, isEmpty };
   };
 
   const updateInputData = () => {
+    if (error) return;
+    const { inRange, isPositive, isValidString, isEmpty } =
+      handleError(numbers);
+    if (!inRange || !isPositive || !isValidString || isEmpty) return;
+
     const inputNumbers = numbers?.split(",").map((num) => Number(num));
     dispatch({
       type: ACTION_TYPES.UPDATE_INPUT_DATA,
@@ -163,6 +204,19 @@ function NumbersInput() {
           Update
         </Button>
       </div>
+      {error ? (
+        <p
+          style={{
+            textAlign: "left",
+            fontSize: 13,
+            opacity: 1,
+            fontWeight: "bold",
+            color: "#ba1f3c",
+          }}
+        >
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

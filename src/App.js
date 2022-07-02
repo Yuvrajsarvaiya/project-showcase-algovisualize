@@ -33,16 +33,6 @@ function App({ algorithmType, setAlgorithmType }) {
   const [maxValue, setMaxValue] = useState(
     Math.max(...state.algoBarValues.barData?.map((val) => val.barInputValue))
   );
-  const [medianValue, setMedianValue] = useState(
-    state.algoBarValues.barData?.reduce(
-      (acc, val) => acc + val.barInputValue,
-      0
-    )
-  );
-
-  // const minValue = useRef(
-  //   Math.min(...state.algoBarValues.barData?.map((val) => val.barInputValue))
-  // );
 
   useEffect(() => {
     console.log(maxValue);

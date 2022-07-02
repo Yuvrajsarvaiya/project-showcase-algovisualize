@@ -59,7 +59,11 @@ const Bar = ({ maxValue }) => {
                   key={`${bar.barInputValue}-${index}`}
                   draggableId={`${bar.barInputValue}-${index}`}
                   index={index}
-                  isDragDisabled={isAlgorithmRunning || isAlgorithmCompleted}
+                  isDragDisabled={
+                    isAlgorithmRunning ||
+                    isAlgorithmCompleted ||
+                    isAlgorithmStarted
+                  }
                 >
                   {(provided) => (
                     <div
